@@ -18,10 +18,10 @@ $(document).ready(function() {
        $(".counter").text(pendingCharCount);//.text will change the test(char number)
 
        if(pendingCharCount < 0){
-        $(".counter").css('color', 'red'); //it will change it to red
+        $(".counter").addClass("redcolor"); //it will change it to red
        }
        else{
-        $(".counter").css('color', 'black'); 
+        $(".counter").removeClass("redcolor"); 
        }
     });
     
