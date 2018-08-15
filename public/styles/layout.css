@@ -3,6 +3,9 @@
  * https://css-tricks.com/international-box-sizing-awareness-day/
  * Do not modify these two selectors, please
  */
+ body {
+  font-family: Roboto Condensed, sans-serif;
+}
 html {
   box-sizing: border-box;
 }
@@ -19,7 +22,13 @@ body {
   color: #244751;
   background-color: #eee;
 }
-
+main {
+  width: 450px;
+  height: 500px;
+  margin: 80px auto 0px auto;
+  background-color:white;
+  padding: 20px;
+}
 /*
  * Additional CSS can be defined below or in other CSS files, as per instructions
  */
