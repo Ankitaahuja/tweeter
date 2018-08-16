@@ -42,14 +42,19 @@ textarea {
   padding: 0 5px;
   font-size: 85%
 }
-
-.lastpart{
+.tweet-box header{
+  display: flex;
+  justify-content: space-between;
+}
+footer{
   background-color: #ffffff;
   margin-top: 10px;
   border-top: 2px solid #e6e3e3;
   padding: 10px 8px;
   border-radius: 0px 0px 10px 10px;
-  font-size: 65%
+  font-size: 65%;
+  display: flex;
+  justify-content: space-between;
 }
 
 .firstpart{
@@ -59,14 +64,30 @@ textarea {
   border-radius: 0px 0px 10px 10px;
 }
 header{
-  padding: 5px 5px 10px 5px 
+  padding: 5px 5px 10px 5px; 
+  display: inline-flex;
 }
 h3{
   line-height: 1em;
   margin: 0
 }
+.inline{
+  display: inline
+}
+.avatar-user{
+  vertical-align: top;
+  display: inline
+}
 .tweet-box:hover {
   border-color:rgb(39, 38, 38);
+}
+.icons {
+  color:yellowgreen;
+  opacity: 0;
+}
+.icons:hover {
+  opacity: 1;
+  
 }
 .redcolor{
   color: red !important;

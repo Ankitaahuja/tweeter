@@ -6,11 +6,12 @@
 var presentCharValue = 0;
 const TotalAllowedChar = 140;
 var pendingCharCount =0;
+
 $(document).ready(function() {
 
    $(".text-holder").on("input", function(){
 
-    presentCharValue= $(".text-holder").val().length;
+    presentCharValue= $("").val().length;
     
         pendingCharCount = TotalAllowedChar - presentCharValue;
     
