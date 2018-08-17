@@ -5,13 +5,14 @@
  */
 var presentCharValue = 0;
 const TotalAllowedChar = 140;
-var pendingCharCount =0;
+var pendingCharCount = 0;
+
 
 $(document).ready(function() {
 
    $(".text-holder").on("input", function(){
 
-    presentCharValue= $("").val().length;
+        presentCharValue = $(".text-holder").val().length;
     
         pendingCharCount = TotalAllowedChar - presentCharValue;
     
@@ -19,14 +20,10 @@ $(document).ready(function() {
        $(".counter").text(pendingCharCount);//.text will change the test(char number)
 
        if(pendingCharCount < 0){
-        $(".counter").addClass("redcolor"); //it will change it to red
-       }
-       else{
+          $(".counter").addClass("redcolor"); //it will change it to red
+       }else{
         $(".counter").removeClass("redcolor"); 
        }
     });
     
   });
-//   $("p").click(function(){
-//     $(this).hide();
-// })

@@ -13,9 +13,6 @@
 //     header.append(span);
 //     tweet.append(header);
 //     console.log(tweet);
-
-
-
 //     return tweet;
 // };
 
@@ -28,61 +25,11 @@
 //     });
 //   }
 
-function createTweetElement(tweetData){
-    
-    var element = `<article class='tweet-box'>
-    <header>
-      <span class = 'avatar-user'>
-     <img class= 'inline' src="${tweetData.user.avatars.small}"/>
-      <h3 class= 'inline'> ${tweetData.user.name}</h3>
-      </span>
-      <p class= 'handler'> ${tweetData.user.handle}</p>
-    </header>
-    <div class='firstpart'>
-        <div class='middlepart'>
-         ${tweetData.content.text}
-        </div>
-        <footer>
-        <div class='lastpart'>
-            ${convertTimeToString()}
-        </div>
-        <div class= 'icons'>
-                <i class='fas fa-flag'></i>
-                <i class='fas fa-retweet'></i>
-                <i class='fas fa-heart'></i>
-        </div>
-        </footer>
-    </div>
-  </article>`;
-  return element;
-}
 
-function convertTimeToString(time){
-
-    return "12 days ago";
-}
-
-const tweetData = {
-    "user": {
-      "name": "Newton",
-      "avatars": {
-        "small":   "https://vanillicon.com/788e533873e80d2002fa14e1412b4188_50.png",
-        "regular": "https://vanillicon.com/788e533873e80d2002fa14e1412b4188.png",
-        "large":   "https://vanillicon.com/788e533873e80d2002fa14e1412b4188_200.png"
-      },
-      "handle": "@SirIsaac"
-    },
-    "content": {
-      "text": "If I have seen further it is by standing on the shoulders of giants"
-    },
-    "created_at": 1461116232227
-  }
-  
-  
-  const data = [
+const data = [
     {
       "user": {
-        "name": "Newton",
+        "name": "Newton2",
         "avatars": {
           "small":   "https://vanillicon.com/788e533873e80d2002fa14e1412b4188_50.png",
           "regular": "https://vanillicon.com/788e533873e80d2002fa14e1412b4188.png",
@@ -125,8 +72,40 @@ const tweetData = {
       "created_at": 1461113796368
     }
   ];
-  
-  
+
+function createTweetElement(tweetData){
+
+    var element = `<article class='tweet-box'>
+    <header>
+      <span class = 'avatar-user'>
+     <img class= 'inline' src="${tweetData.user.avatars.small}"/>
+      <h3 class= 'inline'> ${tweetData.user.name}</h3>
+      </span>
+      <p class= 'handler'> ${tweetData.user.handle}</p>
+    </header>
+    <div class='firstpart'>
+        <div class='middlepart'>
+         ${tweetData.content.text}
+        </div>
+        <footer>
+        <div class='lastpart'>
+            ${convertTimeToString()}
+        </div>
+        <div class= 'icons'>
+                <i class='fas fa-flag'></i>
+                <i class='fas fa-retweet'></i>
+                <i class='fas fa-heart'></i>
+        </div>
+        </footer>
+    </div>
+  </article>`;
+  return element;
+}
+
+function convertTimeToString(time){
+
+    return "12 days ago";
+}
 
 function renderTweets(data){
 
@@ -140,28 +119,40 @@ function renderTweets(data){
 
   
   $(document).ready(function() {
-    renderTweets(data);
+
+    loadTweets();
+    //renderTweets(data);
+
+    $(".new-tweet__form").on("submit", function(event) {
+        event.preventDefault();
+        console.log($(this).serialize());
+        if($(".text-holder").val().length>140){
+            alert("Value is greater than 140!");
+        }else if($(".text-holder").val().length == 0){
+            alert("Empty!");
+        }
+        $('#tweets-container').empty();
+        loadTweets();
+    }); 
+
+    $(".compose-button").click(function(){
+            $(window).scrollTop(0);
+            $(".text-holder").focus().select();
+    });
+
   });
 
 
-//   $.get('http://localhost:8080/tweets',  function(response){ 
-//      alert("success"+response.tweets);  
-//      renderTweets(response.tweets);
-//  });
 
+function loadTweets(){
+    
+    console.log("calling Ajax get request");
 
+    $.get('http://localhost:8080/tweets', function(response){ 
+        console.log(response);
+        
+        renderTweets(response);
 
-// $( "form" ).on( "submit", function( event ) {
-//   event.preventDefault();
-//   console.log( $( this ).serialize() );
-// });
+    });
+}
 
-
-// function refreshTweets(){
-
-//     $.get('http://localhost:8080/tweets',  function(response){ 
-//         alert("success"+response.tweets);  
-//         renderTweets(response.tweets);
-//     });
-// }
- 
