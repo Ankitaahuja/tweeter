@@ -1,30 +1,3 @@
-/*
- * Client-side JS logic goes here
- * jQuery is already loaded
- * Reminder: Use (and do all your DOM work in) jQuery's document ready function
- */
-// function createTweetElement(data){
-//     var tweet = $("<article>").addClass("tweet-box");
-//     var header = $("<header>");
-//     var span = $("<span>").addClass("avatar-user");
-//     var img = $("<img>").addClass("inline").attr("src", data['user']['avatars']['small']);
-//     var name = $("<h3>").addClass("inline").text(data['user']['name']);
-//     span.append(img);
-//     header.append(span);
-//     tweet.append(header);
-//     console.log(tweet);
-//     return tweet;
-// };
-
-
-// function renderTweets(data){
-
-//     data.forEach(element => {
-        
-//         createTweetElement(element);
-//     });
-//   }
-
 
 const data = [
     {
@@ -73,7 +46,7 @@ const data = [
     }
   ];
 
-function createTweetElement(tweetData){
+function createTweetElement(tweetData, displayTime){
 
     var element = `<article class='tweet-box'>
     <header>
@@ -89,7 +62,7 @@ function createTweetElement(tweetData){
         </div>
         <footer>
         <div class='lastpart'>
-            ${convertTimeToString()}
+            ${displayTime}
         </div>
         <div class= 'icons'>
                 <i class='fas fa-flag'></i>
@@ -102,16 +75,42 @@ function createTweetElement(tweetData){
   return element;
 }
 
-function convertTimeToString(time){
 
-    return "12 days ago";
-}
+function convertTimeToString(time){
+    var cd = 24 * 60 * 60 * 1000,
+        ch = 60 * 60 * 1000,
+        d = Math.floor(time / cd),
+        h = Math.floor( (time - d * cd) / ch),
+        m = Math.round( (time - d * cd - h * ch) / 60000),
+        pad = function(n){ return n < 10 ? '0' + n : n; };
+  if( m === 60 ){
+    h++;
+    m = 0;
+  } 
+  if( h === 24 ){
+    d++;
+    h = 0;
+  }
+  return d +" days ago";
+};
+
+// var days = (473 * 24 * 60 * 60 * 1000);
+// var hours = (17 * 60 * 60 * 1000);
+// var mins = (28 * 60 * 1000);
+// var milliseconds  = days + hours + mins;
+// console.log( time( milliseconds ) );
 
 function renderTweets(data){
 
     data.forEach(element => {
-        
-        var tweet = createTweetElement(element);
+      var currentTime = Date.now();
+      console.log(currentTime);
+      var tweetTime = element.created_at;
+      console.log(tweetTime);
+      var displayTime = currentTime - tweetTime;
+      console.log(convertTimeToString(displayTime));
+      
+        var tweet = createTweetElement(element,convertTimeToString(displayTime));
         $('#tweets-container').append(tweet);
 
     });
@@ -119,19 +118,24 @@ function renderTweets(data){
 
   
   $(document).ready(function() {
-
     loadTweets();
-    //renderTweets(data);
 
     $(".new-tweet__form").on("submit", function(event) {
         event.preventDefault();
         console.log($(this).serialize());
         if($(".text-holder").val().length>140){
-            alert("Value is greater than 140!");
+            $(".error-message").slideDown().text("Exceed the maximum word limit!")
+
         }else if($(".text-holder").val().length == 0){
-            alert("Empty!");
+            $(".error-message").slideDown().text("Tweet cannot be empty!")
         }
-        $('#tweets-container').empty();
+
+        $(".new-tweet__submitBtn").click(function () {
+          $(".error-message").slideUp()
+    });
+    });
+    
+        // $('#tweets-container').empty();
         loadTweets();
     }); 
 
@@ -139,9 +143,6 @@ function renderTweets(data){
             $(window).scrollTop(0);
             $(".text-holder").focus().select();
     });
-
-  });
-
 
 
 function loadTweets(){
