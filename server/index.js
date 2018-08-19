@@ -1,34 +1,51 @@
 "use strict";
 
-// Basic express setup:
-
 const PORT          = 8080;
 const express       = require("express");
 const bodyParser    = require("body-parser");
 const app           = express();
-
+const databaseHelper= require('./DatabaseHelper');
+const userHelper    = require("./lib/util/user-helper")
 app.use(bodyParser.urlencoded({ extended: true }));
+
+
 app.use(express.static("public"));
 
-// The in-memory database of tweets. It's a basic object with an array in it.
-const db = require("./lib/in-memory-db");
+app.get("/tweets", async function(req, res) {
+  try {
+      let tweetsData =  await databaseHelper.getAllTweets();
+      res.status(200).json(tweetsData);
+  } catch (err) {
+      res.status(500).json({ error: err.message });
+  }
+});
 
-// The `data-helpers` module provides an interface to the database of tweets.
-// This simple interface layer has a big benefit: we could switch out the
-// actual database it uses and see little to no changes elsewhere in the code
-// (hint hint).
-//
-// Because it exports a function that expects the `db` as a parameter, we can
-// require it and pass the `db` parameter immediately:
-const DataHelpers = require("./lib/data-helpers.js")(db);
+app.post("/tweets", async function(req, res) {
 
-// The `tweets-routes` module works similarly: we pass it the `DataHelpers` object
-// so it can define routes that use it to interact with the data layer.
-const tweetsRoutes = require("./routes/tweets")(DataHelpers);
+  if (!req.body.text) {
+    res.status(400).json({ error: 'invalid request: no data in POST body'});
+    return;
+  }
 
-// Mount the tweets routes at the "/tweets" path prefix:
-app.use("/tweets", tweetsRoutes);
+  const user = req.body.user ? req.body.user : userHelper.generateRandomUser();
+  const tweet = {
+    user: user,
+    content: {
+      text: req.body.text
+    },
+    created_at: Date.now()
+  };
+
+  try {
+        await databaseHelper.saveSingleTweet(tweet);
+        res.status(201).send();
+    } catch (err) {
+        res.status(500).json({ error: err.message });  
+    }
+});
+
 
 app.listen(PORT, () => {
-  console.log("Example app listening on port " + PORT);
+    console.log("Example app listening on port " + PORT);
 });
+  
