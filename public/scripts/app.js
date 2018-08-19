@@ -102,6 +102,9 @@ function convertTimeToString(time){
 
 function renderTweets(data){
 
+  
+    data.sort((element1, element2) => element1.created_at - element1.created_at);
+
     data.forEach(element => {
       var currentTime = Date.now();
       console.log(currentTime);
