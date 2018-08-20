@@ -94,16 +94,10 @@ function convertTimeToString(time){
   return d +" days ago";
 };
 
-// var days = (473 * 24 * 60 * 60 * 1000);
-// var hours = (17 * 60 * 60 * 1000);
-// var mins = (28 * 60 * 1000);
-// var milliseconds  = days + hours + mins;
-// console.log( time( milliseconds ) );
-
 function renderTweets(data){
 
   
-    data.sort((element1, element2) => element1.created_at - element1.created_at);
+    data.sort((a, b) => b.created_at - a.created_at);
 
     data.forEach(element => {
       var currentTime = Date.now();
@@ -122,6 +116,12 @@ function renderTweets(data){
 $(document).ready(function() {
 
     loadTweets();
+    
+    $("#compose").click(function(){
+      $(".new-tweet").slideToggle("slow", function() {
+        $("#textarea").focus();
+      });
+    });
 
     $(".compose-button").click(function(){
 
@@ -144,6 +144,7 @@ $(document).ready(function() {
           $.post('http://localhost:8080/tweets', $(this).serialize(), function(response){ 
             $('#tweets-container').empty();  
             $("#tweet-text").val("");
+            $(".counter").html("140");
             loadTweets();
           });
 

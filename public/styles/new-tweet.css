@@ -1,6 +1,8 @@
 #nav-bar{
-  display: flex;
+  display: block;
   justify-content: space-between;
+  position: sticky;
+  text-align: right;
 }
 
 .new-tweet__header {
@@ -100,9 +102,9 @@ h3{
 }
 .icons {
   color:yellowgreen;
-  opacity: 0;
+    opacity: 0;
 }
-.icons:hover {
+.tweet-box:hover .icons {
   opacity: 1;
   
 }
