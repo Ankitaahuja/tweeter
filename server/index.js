@@ -8,19 +8,20 @@ const databaseHelper= require('./DatabaseHelper');
 const userHelper    = require("./lib/util/user-helper")
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
 app.use(express.static("public"));
 
-app.get("/tweets", async function(req, res) {
+app.get("/tweets", function(req, res) {
   try {
-      let tweetsData =  await databaseHelper.getAllTweets();
-      res.status(200).json(tweetsData);
+      databaseHelper.getAllTweets(function(tweetsData) {
+        res.status(200).json(tweetsData);
+      });
   } catch (err) {
       res.status(500).json({ error: err.message });
   }
 });
 
-app.post("/tweets", async function(req, res) {
+
+app.post("/tweets", function(req, res) {
 
   if (!req.body.text) {
     res.status(400).json({ error: 'invalid request: no data in POST body'});
@@ -37,8 +38,11 @@ app.post("/tweets", async function(req, res) {
   };
 
   try {
-        await databaseHelper.saveSingleTweet(tweet);
-        res.status(201).send();
+        
+        databaseHelper.saveSingleTweet(tweet, function (){
+          res.status(201).send();
+        });
+  
     } catch (err) {
         res.status(500).json({ error: err.message });  
     }

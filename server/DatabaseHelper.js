@@ -1,22 +1,35 @@
 "use strict";
 
 const MongoClient = require("mongodb").MongoClient;
-const MONGODB_URI = "mongodb://localhost:27017";
+const MONGODB_URI = "mongodb://localhost:27017";//Used Mongodb 4.0
 
-const getAllTweets = async function (){
-    let dbServer =  await MongoClient.connect(MONGODB_URI);
-    let db = await dbServer.db("tweeter");
-    let result = await db.collection("tweets").find().toArray();                 
-    let close = await dbServer.close();
-    return result;
+const getAllTweets = function (callback){
+    
+    MongoClient.connect(MONGODB_URI, function(err, dbServer) {
+        if (err) throw err;
+        let db = dbServer.db("tweeter");
+        
+        db.collection("tweets").find().toArray(function(err, result) {
+            if (err) throw err;
+            callback(result);
+            dbServer.close();
+          });   
+      });
 }
 
-const saveSingleTweet = async function (tweetInput){
+
+const saveSingleTweet = function (tweetInput, callback){
+
+    MongoClient.connect(MONGODB_URI, function(err, dbServer) {
+        if (err) throw err;
+        let db = dbServer.db("tweeter");
+        db.collection("tweets").insertOne(tweetInput, function(err, result) {
+            if (err) throw err;
+            callback();
+            dbServer.close();
+          });   
+      });
     
-    let dbServer =  await MongoClient.connect(MONGODB_URI);
-    let db = await dbServer.db("tweeter");
-    let result = await db.collection("tweets").insertOne(tweetInput);               
-    let close = await dbServer.close();
 };
 
 module.exports.saveSingleTweet = saveSingleTweet;
